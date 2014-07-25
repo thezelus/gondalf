@@ -1,5 +1,5 @@
 {
-	"ImportPath": "showtime",
+	"ImportPath": "gondalf",
 	"GoVersion": "go1.3",
 	"Deps": [
 		{
