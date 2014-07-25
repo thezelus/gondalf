@@ -1,0 +1,59 @@
+{
+	"ImportPath": "showtime",
+	"GoVersion": "go1.3",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/go-uuid/uuid",
+			"Comment": "null-12",
+			"Rev": "7dda39b2e7d5e265014674c5af696ba4186679e9"
+		},
+		{
+			"ImportPath": "code.google.com/p/go.crypto/bcrypt",
+			"Comment": "null-212",
+			"Rev": "1064b89a6fb591df0dd65422295b8498916b092f"
+		},
+		{
+			"ImportPath": "code.google.com/p/go.crypto/blowfish",
+			"Comment": "null-212",
+			"Rev": "1064b89a6fb591df0dd65422295b8498916b092f"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/inject",
+			"Comment": "v1.0-rc1",
+			"Rev": "37d7f8432a3e684eef9b2edece76bdfa6ac85b39"
+		},
+		{
+			"ImportPath": "github.com/go-martini/martini",
+			"Comment": "v1.0-3-gadaa8f7",
+			"Rev": "adaa8f7fe1224a8f0fac72d23ee80c149b21f0fb"
+		},
+		{
+			"ImportPath": "github.com/gosimple/conf",
+			"Rev": "6b465b78490c7bb3085a44632a59effd5338d081"
+		},
+		{
+			"ImportPath": "github.com/jinzhu/gorm",
+			"Rev": "744cb7dfda9ee8c681dc17b540cf8db9fa74f726"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Rev": "50a04ed4e5268fb34ca6d885202b569ef89c0a7a"
+		},
+		{
+			"ImportPath": "github.com/martini-contrib/binding",
+			"Rev": "f506d6896ca9a8d797ab6b3744f74c3bcd05eb7a"
+		},
+		{
+			"ImportPath": "github.com/martini-contrib/render",
+			"Rev": "c8d058a00a82f27bfc8a49d62525b7c60efcf5b8"
+		},
+		{
+			"ImportPath": "github.com/stretchr/graceful",
+			"Rev": "1302e8f6efee4be1ed63e592b4a8a95a245a66ba"
+		},
+		{
+			"ImportPath": "gopkg.in/check.v1",
+			"Rev": "871360013c92e1c715c2de6d06b54899468a8a2d"
+		}
+	]
+}
