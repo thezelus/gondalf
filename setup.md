@@ -1,4 +1,4 @@
-##Project setup
+###Project setup###
 
 go get github.com/go-martini/martini
 
@@ -19,13 +19,13 @@ go get github.com/martini-contrib/render
 go get github.com/stretchr/graceful
 
 
-####To run the server
+####To run the server####
 
 (For initializing db)
 
 go run *.go -initdb=true
 
-##Test dependencies
+####Test dependencies####
 
 go get github.com/axw/gocov/gocov
 

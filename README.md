@@ -1,3 +1,6 @@
+###Note:###
+Gondalf is under heavy development which might lead to changes in request or/and response formats. 
+
 ##What is Gondalf?##
 Gondalf is a ready to deploy microservice that provides user management, authentication, and role based authorization features out of box. Gondalf is built using [martini](https://github.com/go-martini/martini) and [gorm](https://github.com/jinzhu/gorm), and uses [postgresql](http://www.postgresql.org) as the default database.
 
@@ -24,8 +27,9 @@ Over the course of multiple projects I realized that there are some common featu
 
 
 ##TODO List##
+- [ ] Add end points for permission checking
+- [ ] Improve documentation 
 - [ ] Add more events to Activity Logs
-- [ ] Improve documentation
 - [ ] Input timeout values and server port from config file
 - [ ] Add SSL support for the end point
 - [ ] Dockerize gondalf
@@ -52,6 +56,19 @@ initdb flag should be set to true when starting the app.
 
 ##Request and Response formats##
 
+###Error Codes###
+
+- Invalid Session Token
+- Expired Session Token
+- Unregistered User
+- Invalid Password
+- First Login Change Password
+- Authentication Failed
+- Encryption Failed
+- Database Error
+- Permission Denied
+
+
 ###LoginCredential###
 
 ####Request####
@@ -74,18 +91,6 @@ deviceId code 1 for web, 2 for mobile
   "error":"errorResponse"
 }
 ```
-
-#####Error Codes#####
-
-- Invalid Session Token
-- Expired Session Token
-- Unregistered User
-- Invalid Password
-- First Login Change Password
-- Authentication Failed
-- Encryption Failed
-- Database Error
-- Permission Denied
 
 ###ValidateUsername###
 
