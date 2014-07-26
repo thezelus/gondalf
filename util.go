@@ -9,6 +9,18 @@ import (
 	"strconv"
 )
 
+//Error types:
+//
+//Invalid Session Token
+//Expired Session Token
+//Unregistered User
+//Invalid Password
+//First Login Change Password
+//Authentication Failed
+//Encryption Failed
+//Database Error
+//Permission Denied
+
 var (
 	TRACE    *log.Logger
 	INFO     *log.Logger
@@ -27,6 +39,9 @@ var (
 	PermissionDenied         = errors.New("Permission Denied")
 )
 
+//Constant values:
+//For web use 1
+//For mobile use 2
 const (
 	web    = 1
 	mobile = 2

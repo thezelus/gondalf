@@ -32,13 +32,13 @@ Over the course of multiple projects I realized that there are some common featu
 - [ ] Add support for other databases
 
 
-##Why call it *Gondalf* ?##
+###Why call it *Gondalf* ?###
 
 Because  <img src="http://www.reactiongifs.com/wp-content/uploads/2013/12/shall-not-pass.gif" width="100px" height="50px"/> and it is Go, so why not both?
 
 
  
-##Installation instructions:##
+##Installation Instructions:##
 
 - Clone the repository in a local directory
 
@@ -48,3 +48,112 @@ Because  <img src="http://www.reactiongifs.com/wp-content/uploads/2013/12/shall-
 initdb flag should be set to true when starting the app.
 
 `$ bash startApp.sh -initdb=true` 
+
+##Request and Response formats##
+
+###LoginCredential###
+
+####Request####
+
+```javascript
+{
+  "username": "test2User",
+  "password" : "testPassword",
+  "deviceId" : 1
+}
+```
+
+deviceId code 1 for web, 2 for mobile
+
+####Response####
+
+```javascript
+{
+  "sessionToken": "testSessionToken",
+  "error":"errorResponse"
+}
+```
+
+#####Error Codes#####
+
+- Invalid Session Token
+- Expired Session Token
+- Unregistered User
+- Invalid Password
+- First Login Change Password
+- Authentication Failed
+- Encryption Failed
+- Database Error
+- Permission Denied
+
+###ValidateUsername###
+
+For validating unique username
+
+####Request####
+
+```javascript
+{
+	"username": "test2User"
+}
+```
+
+####Response####
+
+```javascript
+{
+	"valid": true/false
+}
+```
+
+###CreateUser###
+
+####Request####
+
+```javascript
+{
+	"username": "test2User",
+	"legalname": "testLegalName",
+	"password": "testPassword"
+}
+```
+####Response####
+
+```javascript
+{
+	"userCreated": true/false
+}
+```
+
+###Change password###
+
+####Request####
+
+```javascript
+{
+	"username": "test2User",
+	"oldPassword": "testOldPassword",
+	"newPassword": "newTestPassword",
+	"deviceId": 1
+}
+```
+
+####Response####
+
+If the old credentials are correct then:
+
+```javascript
+{
+	"passwordChanged": true,
+	"sessionToken": "testSessionToken",
+	"error": nil
+}
+```
+
+else
+
+```javascript
+{
+	"passwordChanged" :false
+}
+```

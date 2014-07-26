@@ -17,7 +17,7 @@ type LoginCredential struct {
 
 type CreateUserRequest struct {
 	Username  string `json:"username" binding:"required"`
-	LegalName string `json:"legalName" binding:"required"`
+	LegalName string `json:"legalname" binding:"required"`
 	Password  string `json:"password" binding:"required"`
 }
 
