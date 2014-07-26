@@ -32,6 +32,7 @@ Over the course of multiple projects I realized that there are some common featu
 - [ ] Add more events to Activity Logs
 - [ ] Input timeout values and server port from config file
 - [ ] Add SSL support for the end point
+- [ ] Add CI on checkins
 - [ ] Dockerize gondalf
 - [ ] Provide one click deploy solution
 - [ ] Add support for other databases
