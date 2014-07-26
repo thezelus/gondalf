@@ -31,3 +31,7 @@ type ChangePasswordRequest struct {
 	NewPassword string `json:"newPassword" binding:"required"`
 	DeviceId    int    `json:"deviceId" binding:"required"`
 }
+
+type ValidateSessionTokenRequest struct {
+	SessionToken string `json:"sessionToken" binding:"required"`
+}

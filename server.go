@@ -44,6 +44,9 @@ func main() {
 	//Validate unique username
 	m.Post("/validate/username", binding.Bind(ValidateUsernameRequest{}), ValidateUsernameHandler)
 
+	//Validate session token
+	m.Post("/validate/token", binding.Bind(ValidateUsernameRequest{}), ValidateSessionTokenHandler)
+
 	//Change password
 	m.Post("/user/changePassword", binding.Bind(ChangePasswordRequest{}), ChangePasswordHandler)
 

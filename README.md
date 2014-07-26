@@ -24,6 +24,7 @@ Over the course of multiple projects I realized that there are some common featu
 
 
 ##TODO List##
+- [ ] Add more events to Activity Logs
 - [ ] Improve documentation
 - [ ] Input timeout values and server port from config file
 - [ ] Add SSL support for the end point
@@ -155,5 +156,26 @@ else
 ```javascript
 {
 	"passwordChanged" :false
+}
+```
+
+###Validate Session Token###
+
+####Request####
+
+```javascript
+{
+	"sessionToken": "testSessionToken"
+}
+```
+
+####Response####
+
+Returns userId = -1 if there is an error
+
+```javascript
+{
+	"userId": 1234,
+	"error": nil
 }
 ```

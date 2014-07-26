@@ -69,8 +69,17 @@ func ChangePasswordHandler(request ChangePasswordRequest, r render.Render) {
 
 func ValidateSessionTokenHandler(request ValidateSessionTokenRequest, r render.Render) {
 
+	err, userId := ValidateSessionToken(request.SessionToken, &dbConnection)
+
+	if err != nil {
+		ERROR.Println("Error validating sessionToken: " + request.SessionToken + ", error:" + err.Error())
+		r.JSON(500, map[string]interface{}{"userId": userId, "error": err.Error()})
+	} else {
+		r.JSON(200, map[string]interface{}{"userId": userId, "error": nil})
+	}
+
 }
 
-func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
+//func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
 
-}
+//}
