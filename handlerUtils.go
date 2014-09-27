@@ -258,7 +258,9 @@ func ChangePassword(username string, newpassword string, db *gorm.DB) (int, erro
 		return 500, DatabaseError
 	}
 
+	db.Save(&ActivityLog{UserId: user.Id, TokenId: -1, ActivityTime: time.Now().UTC(), Event: PASSWORD_CHANGE})
 	TRACE.Println("Password changed for userId: " + strconv.FormatInt(user.Id, 10))
+
 	return 200, nil
 }
 
@@ -277,6 +279,7 @@ func UpdatePasswordRecordLoginCount(userid int64, resetFlag bool, db *gorm.DB) e
 	}
 
 	db.Save(&record)
+	
 	return nil
 }
 

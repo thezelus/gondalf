@@ -80,6 +80,6 @@ func ValidateSessionTokenHandler(request ValidateSessionTokenRequest, r render.R
 
 }
 
-//func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
+// func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
 
-//}
+// }

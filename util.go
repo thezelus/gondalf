@@ -47,6 +47,7 @@ const (
 	mobile = 2
 
 	LOGIN = "LOGIN"
+	PASSWORD_CHANGE = "PASSWORD_CHANGE"
 )
 
 //Initializes the app by setting up logging file, defaults to stdout in case of error opening the specified file.
