@@ -50,6 +50,9 @@ func main() {
 	//Change password
 	m.Post("/user/changePassword", binding.Bind(ChangePasswordRequest{}), ChangePasswordHandler)
 
+	//Check permission
+	m.Post("/user/checkPermission", binding.Bind(CheckPermissionRequest{}), CheckPermissionsForUserHandler)
+
 	graceful.Run(":3000", 10*time.Second, m)
 
 	TRACE.Println("DB connection closed")

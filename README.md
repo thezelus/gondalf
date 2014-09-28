@@ -27,7 +27,8 @@ Over the course of multiple projects I realized that there are some common featu
 
 
 ##TODO List##
-- [ ] Add end points for permission checking
+- [X] Add end points for permission checking
+- [ ] Switch to [negroni](https://github.com/codegangsta/negroni)
 - [ ] Improve documentation 
 - [ ] Add more events to Activity Logs
 - [ ] Input timeout values and server port from config file

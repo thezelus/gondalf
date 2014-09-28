@@ -1,6 +1,8 @@
 package main
 
 import (
+	"strconv"
+
 	"github.com/martini-contrib/render"
 )
 
@@ -80,6 +82,13 @@ func ValidateSessionTokenHandler(request ValidateSessionTokenRequest, r render.R
 
 }
 
-// func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
+func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
 
-// }
+	err := CheckPermissionsForUser(request.UserId, Permission{PermissionDescription: request.PermissionDescription}, &dbConnection)
+	if err != nil {
+		ERROR.Println("Error checking for permission for userId: " + strconv.FormatInt(request.UserId, 10) + ", permission: " + request.PermissionDescription)
+		r.JSON(500, map[string]interface{}{"permissionCheckResult": err.Error()})
+	} else {
+		r.JSON(200, map[string]interface{}{"permissionCheckResult": nil})
+	}
+}

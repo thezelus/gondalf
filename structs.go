@@ -35,3 +35,8 @@ type ChangePasswordRequest struct {
 type ValidateSessionTokenRequest struct {
 	SessionToken string `json:"sessionToken" binding:"required"`
 }
+
+type CheckPermissionRequest struct {
+	UserId                int64  `json:"userId" binding:"required"`
+	PermissionDescription string `json:"permissionDescription" binding:"required"`
+}
