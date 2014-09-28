@@ -186,3 +186,21 @@ Returns userId = -1 if there is an error
 	"error": nil
 }
 ```
+
+###Permission Checking
+
+####Request####
+
+```javascript
+{
+  "userId": 123456,
+  "permissionDescription" : "ADMIN"
+}
+````
+
+####Response####
+
+```javascript
+{
+  "permissionCheckResult" : nil (or error details depending on the userId)
+}
