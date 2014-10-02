@@ -46,7 +46,7 @@ const (
 	web    = 1
 	mobile = 2
 
-	LOGIN = "LOGIN"
+	LOGIN           = "LOGIN"
 	PASSWORD_CHANGE = "PASSWORD_CHANGE"
 )
 

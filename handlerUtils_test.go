@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"code.google.com/p/go.crypto/bcrypt"
+	"github.com/jinzhu/gorm"
 	. "gopkg.in/check.v1"
 )
 
@@ -282,4 +283,53 @@ func (suite *HandlerUtilsTestSuite) TestValidateSessionToken(c *C) {
 
 	tx.Rollback()
 
+}
+
+func (suite *HandlerUtilsTestSuite) TestCheckPermissions(c *C) {
+	TRACE.Println("Running test :TestCheckPermissions")
+
+	tx := dbConnection.Begin()
+
+	validPermission := Permission{PermissionDescription: "VALID_PERMISSION"}
+	invalidPermission := Permission{PermissionDescription: "INVALID_PERMISSION"}
+
+	validGroup := Group{GroupDescription: "VALID_GROUP"}
+	invalidGroup := Group{GroupDescription: "INVALID_GROUP"}
+
+	user := User{UserName: "User128256", LegalName: "User128256", Password: "Password128256", Active: true}
+	tx.Save(&user)
+	c.Assert(user.Id, NotNil)
+
+	tx.Save(&validPermission)
+	tx.Save(&invalidPermission)
+
+	tx.Save(&validGroup)
+	tx.Save(&invalidGroup)
+
+	groupPermission := GroupPermission{GroupId: validGroup.Id, PermissionId: validPermission.Id}
+	tx.Save(&groupPermission)
+
+	userGroup := UserGroup{UserId: user.Id, GroupId: validGroup.Id}
+	tx.Save(&userGroup)
+
+	err := CheckPermissionsForUser(int64(-1), validPermission, tx)
+	c.Assert(err, Equals, PermissionDenied)
+
+	err = CheckPermissionsForUser(user.Id, invalidPermission, tx)
+	c.Assert(err, Equals, gorm.RecordNotFound)
+
+	absentPermission := Permission{PermissionDescription: "NOT_PRESENT"}
+	err = CheckPermissionsForUser(user.Id, absentPermission, tx)
+	c.Assert(err, Equals, gorm.RecordNotFound)
+
+	invalidGroupPermission := GroupPermission{GroupId: invalidGroup.Id, PermissionId: invalidPermission.Id}
+	tx.Save(&invalidGroupPermission)
+
+	err = CheckPermissionsForUser(user.Id, invalidPermission, tx)
+	c.Assert(err, Equals, PermissionDenied)
+
+	err = CheckPermissionsForUser(user.Id, validPermission, tx)
+	c.Assert(err, IsNil)
+
+	tx.Rollback()
 }
