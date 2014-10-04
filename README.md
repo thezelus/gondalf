@@ -28,14 +28,13 @@ Over the course of multiple projects I realized that there are some common featu
 
 ##TODO List##
 - [X] Add end points for permission checking
-- [ ] Switch to [negroni](https://github.com/codegangsta/negroni)
-- [ ] Improve documentation 
-- [ ] Add more events to Activity Logs
 - [ ] Input timeout values and server port from config file
 - [ ] Add SSL support for the end point
-- [ ] Add CI on checkins
 - [ ] Dockerize gondalf
+- [ ] Add more events to Activity Logs
 - [ ] Provide one click deploy solution
+- [ ] Improve documentation 
+- [ ] Add CI on checkins
 - [ ] Add support for other databases
 
 
