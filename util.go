@@ -7,6 +7,8 @@ import (
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/spf13/viper"
 )
 
 //Error types:
@@ -112,4 +114,16 @@ func GetAppProperties(propertyName string) (string, error) {
 		}
 	}
 	return "", errors.New("App property " + propertyName + " not set")
+}
+
+func LoadConfigurationFromFile() {
+	TRACE.Println("Loading configuration from " + configName)
+
+	viper.SetConfigName(configName)
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+
+	if err != nil {
+		panic("Configuration couldn't be initialized, panicking now")
+	}
 }

@@ -3,18 +3,20 @@ package main
 import (
 	"flag"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/go-martini/martini"
 	"github.com/jinzhu/gorm"
 	"github.com/martini-contrib/binding"
 	"github.com/martini-contrib/render"
+	"github.com/spf13/viper"
 	"github.com/stretchr/graceful"
 )
 
 var (
 	dbConnection gorm.DB
-	configFile   = "gondalf.config"
+	configName   = "gondalfConfig"
 	logFile      = "gondalf.log"
 	testLogFile  = "testLogs.log"
 	properties   []AppProperties
@@ -25,6 +27,8 @@ func main() {
 
 	initializeDB := flag.Bool("initdb", false, "initalizing database")
 	flag.Parse()
+
+	LoadConfigurationFromFile()
 
 	InitApp(logFile, initializeDB)
 
@@ -53,7 +57,12 @@ func main() {
 	//Check permission
 	m.Post("/user/checkPermission", binding.Bind(CheckPermissionRequest{}), CheckPermissionsForUserHandler)
 
-	graceful.Run(":3000", 10*time.Second, m)
+	appGracefulShutdownTimeinSeconds, err := strconv.Atoi(viper.GetString("appGracefulShutdownTimeinSeconds"))
+	if err != nil {
+		ERROR.Panicln("Cannot start the server, shutdown time missing from config file")
+	}
+
+	graceful.Run(":"+viper.GetString("appPort"), time.Duration(appGracefulShutdownTimeinSeconds)*time.Second, m)
 
 	TRACE.Println("DB connection closed")
 	defer cleanUpAfterShutdown()

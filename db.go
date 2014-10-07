@@ -1,11 +1,12 @@
 package main
 
 import (
+	"strconv"
 	"time"
 
-	"github.com/gosimple/conf"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 //Method to initialize by automigrating new tables and adding columns to old ones.
@@ -69,8 +70,16 @@ func InsertDeviceTypes(db *gorm.DB) bool {
 //Returns a database connection with connection pooling
 func GetDBConnection() gorm.DB {
 
-	TRACE.Println("Connection properties will be read from " + configFile)
-	connParam := GetConnectionProperties(configFile)
+	LoadConfigurationFromFile()
+
+	var connParam ConnectionParameters
+
+	connParam.username = viper.GetString("dbUsername")
+	connParam.password = viper.GetString("dbPassword")
+	connParam.host = viper.GetString("dbHost")
+	connParam.port = viper.GetString("dbPort")
+	connParam.dbname = viper.GetString("dbName")
+	connParam.sslmode = viper.GetString("dbSSLmode")
 
 	source := "user=" + connParam.username +
 		" password=" + connParam.password +
@@ -87,53 +96,12 @@ func GetDBConnection() gorm.DB {
 
 	TRACE.Println("DB Connection opened")
 
-	db.DB().SetMaxIdleConns(10)
-	db.DB().SetMaxOpenConns(100)
+	maxIdleConnections, _ := strconv.Atoi(viper.GetString("dbMaxIdleConnections"))
+	maxOpenConnections, _ := strconv.Atoi(viper.GetString("dbMaxOpenConnections"))
+
+	db.DB().SetMaxIdleConns(maxIdleConnections)
+	db.DB().SetMaxOpenConns(maxOpenConnections)
 	db.DB().Ping()
 
 	return db
-}
-
-//Method to get DB connection properties from the specified file
-func GetConnectionProperties(filename string) ConnectionParameters {
-
-	var conParam ConnectionParameters
-
-	c, err := conf.ReadFile(filename)
-
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	conParam.username, err = c.String("default", "username")
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	conParam.password, err = c.String("default", "password")
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	conParam.host, err = c.String("default", "host")
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	conParam.port, err = c.String("default", "port")
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	conParam.dbname, err = c.String("default", "dbname")
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	conParam.sslmode, err = c.String("default", "sslmode")
-	if err != nil {
-		ERROR.Panicln(err)
-	}
-
-	return conParam
 }

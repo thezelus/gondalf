@@ -28,7 +28,7 @@ Over the course of multiple projects I realized that there are some common featu
 
 ##TODO List##
 - [X] Add end points for permission checking
-- [ ] Input timeout values and server port from config file
+- [X] Input timeout values and server port from config file
 - [ ] Add SSL support for the end point
 - [ ] Dockerize gondalf
 - [ ] Add more events to Activity Logs

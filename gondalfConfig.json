@@ -1,0 +1,12 @@
+{
+    "dbUsername": "postgres",
+    "dbPassword": "postgres",
+    "dbHost": "localhost",
+    "dbPort": "5432",
+    "dbName": "gondalf",
+    "dbSSLmode": "disable",
+    "dbMaxIdleConnections": "10",
+    "dbMaxOpenConnections": "100",
+    "appPort":"3000",
+    "appGracefulShutdownTimeinSeconds":"10"
+}
