@@ -29,8 +29,10 @@ Over the course of multiple projects I realized that there are some common featu
 ##TODO List##
 - [X] Add end points for permission checking
 - [X] Input timeout values and server port from config file
-- [ ] Add SSL support for the end point
+- [ ] Refresh app properties from DB after fixed interval
+- [ ] Add a cron job for cleaning up and archiving expired session tokens to keep the validation request latency low
 - [ ] Dockerize gondalf
+- [ ] Add SSL support for the end point
 - [ ] Add more events to Activity Logs
 - [ ] Provide one click deploy solution
 - [ ] Improve documentation 
@@ -68,6 +70,15 @@ initdb flag should be set to true when starting the app.
 - Encryption Failed
 - Database Error
 - Permission Denied
+
+###App Properties###
+
+These are set in a table called "app_properties" and are initially set to default values when the application is started with "intidb" flag.
+
+- *WebTimeOut* - Defines the inactivity time after which a session token created from web login is considered expired, default value is 30 minutes
+- *MobileTimeOut* - Defines the inactivity time after which a session token created from mobile login is considered expired, default value is 720 minutes
+- *TimeExtension* - Defines the time extension provided to a session token (web or mobile) if it is validated with less than 5 minutes of life time remaining. This is done to avoid stale tokens lingering around on devices. Default set to 5 minutes.
+- *DbDebugLogs* - Flag for turning on printing of database debugging logs, default value is false.
 
 
 ###LoginCredential###
