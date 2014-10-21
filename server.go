@@ -21,14 +21,13 @@ var (
 	testLogFile  = "testLogs.log"
 	properties   []AppProperties
 	file         *os.File
+	quit         = make(chan struct{})
 )
 
 func main() {
 
 	initializeDB := flag.Bool("initdb", false, "initalizing database")
 	flag.Parse()
-
-	LoadConfigurationFromFile()
 
 	InitApp(logFile, initializeDB)
 
@@ -49,7 +48,7 @@ func main() {
 	m.Post("/validate/username", binding.Bind(ValidateUsernameRequest{}), ValidateUsernameHandler)
 
 	//Validate session token
-	m.Post("/validate/token", binding.Bind(ValidateUsernameRequest{}), ValidateSessionTokenHandler)
+	m.Post("/validate/token", binding.Bind(ValidateSessionTokenRequest{}), ValidateSessionTokenHandler)
 
 	//Change password
 	m.Post("/user/changePassword", binding.Bind(ChangePasswordRequest{}), ChangePasswordHandler)
@@ -64,11 +63,13 @@ func main() {
 
 	graceful.Run(":"+viper.GetString("appPort"), time.Duration(appGracefulShutdownTimeinSeconds)*time.Second, m)
 
-	TRACE.Println("DB connection closed")
 	defer cleanUpAfterShutdown()
 }
 
 func cleanUpAfterShutdown() {
+	//TRACE.Println("Sending kill signal to all routines by closing quit channel")
+	//close(quit)
+
 	TRACE.Println("Cleaning up dbConnection and file stream")
 	dbConnection.Close()
 	file.Close()
