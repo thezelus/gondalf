@@ -7,7 +7,9 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
+	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 )
 
@@ -78,8 +80,7 @@ func InitApp(logFileName string, initializeDB *bool) {
 		TRACE.Println("DB Init Complete")
 	}
 
-	dbConnection.Find(&properties)
-	TRACE.Println("App properties array initialized")
+	LoadAppPropertiesFromDb()
 
 	dbLoggerPropertyValue, err := GetAppProperties("DbDebugLogs")
 
@@ -92,6 +93,7 @@ func InitApp(logFileName string, initializeDB *bool) {
 		}
 	}
 
+	StartScheduledJobs()
 }
 
 func InitLogger(traceHandle io.Writer, infoHandle io.Writer, warningHandle io.Writer, errorHandle io.Writer, databaseHandle io.Writer) {
@@ -126,4 +128,33 @@ func LoadConfigurationFromFile() {
 	if err != nil {
 		panic("Configuration couldn't be initialized, panicking now")
 	}
+}
+
+func LoadAppPropertiesFromDb() {
+	dbConnection.Find(&properties)
+	TRACE.Println("App properties array initialized at: " + time.Now().String())
+}
+
+func ArchiveTokenAfterCutOffTime(db *gorm.DB) {
+
+	tokenCutOffTimeString, err := GetAppProperties("TokenCutOffTime")
+	if err != nil {
+		ERROR.Println(err.Error())
+	}
+
+	tokenCutOffTimeInteger, err := strconv.Atoi(tokenCutOffTimeString)
+	if err != nil {
+		ERROR.Println("String to integer conversion failed for TokenCutOffTime, reverting to default value = 30 minutes")
+		tokenCutOffTimeInteger = 30
+	}
+
+	TRACE.Println("Token archiving started at: " + time.Now().String())
+
+	db.Exec("UPDATE TABLE tokens SET active = ? WHERE (SELECT EXTRACT(MINUTE FROM (? - expires_at)) FROM tokens) > ?", false, time.Now().UTC(), tokenCutOffTimeInteger)
+
+	db.Exec("INSERT INTO archived_tokens (token, user_id, key, created_at, last_accessed_at, expires_at, device_type_id, active)(SELECT (token, user_id, key, created_at, last_accessed_at, expires_at, device_type_id, active) WHERE active = ?)", false)
+
+	db.Exec("DELETE FROM tokens WHERE active = ?", false)
+
+	TRACE.Println("Token archiving completed at: " + time.Now().String())
 }

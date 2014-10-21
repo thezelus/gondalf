@@ -279,7 +279,7 @@ func UpdatePasswordRecordLoginCount(userid int64, resetFlag bool, db *gorm.DB) e
 	}
 
 	db.Save(&record)
-	
+
 	return nil
 }
 

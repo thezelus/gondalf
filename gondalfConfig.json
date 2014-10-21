@@ -8,5 +8,6 @@
     "dbMaxIdleConnections": "10",
     "dbMaxOpenConnections": "100",
     "appPort":"3000",
-    "appGracefulShutdownTimeinSeconds":"10"
+    "appGracefulShutdownTimeinSeconds":"10",
+    "appPropertiesRefreshTimeinMinutes":"10"
 }

@@ -25,6 +25,7 @@ func InitDB() {
 	dbConnection.AutoMigrate(ActivityLog{})
 
 	dbConnection.AutoMigrate(Token{})
+	dbConnection.AutoMigrate(ArchivedToken{})
 	dbConnection.AutoMigrate(DeviceType{})
 	dbConnection.AutoMigrate(PasswordRecord{})
 
@@ -38,8 +39,10 @@ func InsertAppProperties(db *gorm.DB) bool {
 	mobileTimeOut := AppProperties{PropertyName: "MobileTimeOut", PropertyValue: "720", UpdatedAt: time.Now().UTC()}
 	dbDebugLogs := AppProperties{PropertyName: "DbDebugLogs", PropertyValue: "false", UpdatedAt: time.Now().UTC()}
 	timeExtension := AppProperties{PropertyName: "TimeExtension", PropertyValue: "5", UpdatedAt: time.Now().UTC()}
+	tokenCutOffTime := AppProperties{PropertyName: "TokenCutOffTime", PropertyValue: "30", UpdatedAt: time.Now().UTC()}
+	tokenCleanUpFrequency := AppProperties{PropertyName: "TokenCleanUpFrequency", PropertyValue: "180", UpdatedAt: time.Now().UTC()}
 
-	propertiesSlice := []AppProperties{webTimeOut, mobileTimeOut, dbDebugLogs, timeExtension}
+	propertiesSlice := []AppProperties{webTimeOut, mobileTimeOut, dbDebugLogs, timeExtension, tokenCutOffTime, tokenCleanUpFrequency}
 
 	for i := range propertiesSlice {
 		existsErr := db.Where(&AppProperties{PropertyName: propertiesSlice[i].PropertyName}).Find(&AppProperties{}).Error

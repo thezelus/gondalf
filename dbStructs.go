@@ -60,6 +60,18 @@ type Token struct {
 	Active         bool `sql:not null`
 }
 
+type ArchivedToken struct {
+	Id             int64
+	Token          string `sql:"type:varchar(256);not null;unique"`
+	UserId         int64
+	Key            string `sql:"type:varchar(256);not null"`
+	CreatedAt      time.Time
+	LastAccessedAt time.Time
+	ExpiresAt      time.Time
+	DeviceTypeId   int
+	Active         bool `sql:not null`
+}
+
 type DeviceType struct {
 	Id         int
 	Device     string `sql:"not null"`
