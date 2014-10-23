@@ -58,15 +58,19 @@ func ChangePasswordHandler(request ChangePasswordRequest, r render.Render) {
 		if changePasswordError == nil {
 			login := LoginCredential{Username: request.Username, Password: request.NewPassword, DeviceId: request.DeviceId}
 			sessionToken, err := CreateNewTokenDbEntry(login, &dbConnection)
-			if err != nil {
+			if err == nil {
+				r.JSON(200, map[string]interface{}{"passwordChanged": true, "sessionToken": sessionToken, "error": nil})
+			} else {
 				ERROR.Println("DB entry failed for token, returning 500")
 				r.JSON(500, map[string]interface{}{"passwordChanged": true, "sessionToken": "", "error": err.Error()})
 			}
-			r.JSON(200, map[string]interface{}{"passwordChanged": true, "sessionToken": sessionToken, "error": nil})
+		} else {
+			r.JSON(status, map[string]interface{}{"passwordChanged": false})
 		}
-		r.JSON(status, map[string]interface{}{"passwordChanged": false})
+	} else {
+		r.JSON(401, AuthenticationFailed.Error())
 	}
-	r.JSON(401, AuthenticationFailed.Error())
+
 }
 
 func ValidateSessionTokenHandler(request ValidateSessionTokenRequest, r render.Render) {
