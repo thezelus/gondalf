@@ -31,7 +31,7 @@ Over the course of multiple projects I realized that there are some common featu
 - [X] Input timeout values and server port from config file
 - [X] Refresh app properties from DB after fixed interval
 - [X] Add a cron job for cleaning up and archiving expired session tokens to keep the validation request latency low
-- [ ] Dockerize gondalf
+- [X] Dockerize gondalf
 - [ ] Add SSL support for the end point
 - [ ] Add more events to Activity Logs
 - [ ] Provide one click deploy solution
