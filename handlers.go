@@ -1,8 +1,6 @@
 package main
 
 import (
-	"strconv"
-
 	"github.com/martini-contrib/render"
 )
 
@@ -19,15 +17,18 @@ func LoginHandler(login LoginCredential, r render.Render) {
 	if authenticateUserErr == nil {
 		sessionToken, err := CreateNewTokenDbEntry(login, &dbConnection)
 		if err != nil {
-			ERROR.Println("DB entry failed for token, returning 500")
-			r.JSON(500, "Ughh, something wrong with the server")
+			ERROR.Println(DatabaseError.Error() + " :" + login.Username)
+			response := ErrorResponse{Status: "Internal Server Error", Message: SystemError.Error(), Description: ""}
+			r.JSON(500, response)
 		} else {
-			r.JSON(200, map[string]interface{}{"sessionToken": sessionToken, "error": nil})
+			r.JSON(200, map[string]interface{}{"sessionToken": sessionToken})
 		}
 	} else if authenticateUserErr == FirstLoginPasswordChange {
-		r.JSON(200, map[string]interface{}{"sessionToken": "", "error": FirstLoginPasswordChange.Error()})
+		response := ErrorResponse{Status: "Forbidden", Message: FirstLoginPasswordChange.Error(), Description: ""}
+		r.JSON(403, response)
 	} else {
-		r.JSON(401, AuthenticationFailed.Error())
+		response := ErrorResponse{Status: "Unauthorized", Message: AuthenticationFailed.Error(), Description: ""}
+		r.JSON(401, response)
 	}
 }
 
@@ -41,10 +42,15 @@ func ValidateUsernameHandler(usernameRequest ValidateUsernameRequest, r render.R
 func CreateUserHandler(request CreateUserRequest, r render.Render) {
 
 	status, err := CreateNewUser(request, &dbConnection)
-
 	if err != nil {
 		ERROR.Println(err.Error())
-		r.JSON(status, map[string]interface{}{"userCreated": false})
+		var response ErrorResponse
+		if status == 500 {
+			response = ErrorResponse{Status: "Internal Server Error", Message: SystemError.Error(), Description: ""}
+		} else if status == 409 {
+			response = ErrorResponse{Status: "Conflict", Message: err.Error(), Description: ""}
+		}
+		r.JSON(status, response)
 	} else {
 		r.JSON(status, map[string]interface{}{"userCreated": true})
 	}
@@ -59,16 +65,24 @@ func ChangePasswordHandler(request ChangePasswordRequest, r render.Render) {
 			login := LoginCredential{Username: request.Username, Password: request.NewPassword, DeviceId: request.DeviceId}
 			sessionToken, err := CreateNewTokenDbEntry(login, &dbConnection)
 			if err == nil {
-				r.JSON(200, map[string]interface{}{"passwordChanged": true, "sessionToken": sessionToken, "error": nil})
+				r.JSON(200, map[string]interface{}{"passwordChanged": true, "sessionToken": sessionToken})
 			} else {
 				ERROR.Println("DB entry failed for token, returning 500")
-				r.JSON(500, map[string]interface{}{"passwordChanged": true, "sessionToken": "", "error": err.Error()})
+				response := ErrorResponse{Status: "Internal Server Error", Message: "Password changed with but encountered: " + SystemError.Error(), Description: ""}
+				r.JSON(500, response)
 			}
 		} else {
-			r.JSON(status, map[string]interface{}{"passwordChanged": false})
+			var response ErrorResponse
+			if status == 401 {
+				response = ErrorResponse{Status: "Unauthorized", Message: AuthenticationFailed.Error(), Description: ""}
+			} else if status == 500 {
+				response = ErrorResponse{Status: "Internal Server Error", Message: SystemError.Error(), Description: ""}
+			}
+			r.JSON(status, response)
 		}
 	} else {
-		r.JSON(401, AuthenticationFailed.Error())
+		response := ErrorResponse{Status: "Unauthorized", Message: AuthenticationFailed.Error(), Description: ""}
+		r.JSON(401, response)
 	}
 
 }
@@ -77,22 +91,35 @@ func ValidateSessionTokenHandler(request ValidateSessionTokenRequest, r render.R
 
 	err, userId := ValidateSessionToken(request.SessionToken, &dbConnection)
 
-	if err != nil {
-		ERROR.Println("Error validating sessionToken: " + request.SessionToken + ", error:" + err.Error())
-		r.JSON(500, map[string]interface{}{"userId": userId, "error": err.Error()})
+	if err == nil {
+		r.JSON(200, map[string]interface{}{"userId": userId})
 	} else {
-		r.JSON(200, map[string]interface{}{"userId": userId, "error": nil})
+		ERROR.Println("Error validating sessionToken: " + request.SessionToken + ", error:" + err.Error())
+		if err == InvalidSessionToken {
+			response := ErrorResponse{Status: "Unauthorized", Message: InvalidSessionToken.Error(), Description: ""}
+			r.JSON(401, response)
+		} else if err == ExpiredSessionToken {
+			response := ErrorResponse{Status: "Forbidden", Message: ExpiredSessionToken.Error(), Description: ""}
+			r.JSON(403, response)
+		} else {
+			response := ErrorResponse{Status: "Internal Server Error", Message: SystemError.Error(), Description: ""}
+			r.JSON(500, response)
+		}
 	}
-
 }
 
 func CheckPermissionsForUserHandler(request CheckPermissionRequest, r render.Render) {
 
 	err := CheckPermissionsForUser(request.UserId, Permission{PermissionDescription: request.PermissionDescription}, &dbConnection)
-	if err != nil {
-		ERROR.Println("Error checking for permission for userId: " + strconv.FormatInt(request.UserId, 10) + ", permission: " + request.PermissionDescription)
-		r.JSON(500, map[string]interface{}{"permissionCheckResult": err.Error()})
+
+	if err == nil {
+		r.JSON(200, map[string]interface{}{"permissionCheck": true})
+	} else if err == PermissionDenied {
+		response := ErrorResponse{Status: "Unauthorized", Message: PermissionDenied.Error(), Description: ""}
+		r.JSON(401, response)
 	} else {
-		r.JSON(200, map[string]interface{}{"permissionCheckResult": nil})
+		response := ErrorResponse{Status: "Internal Server Error", Message: SystemError.Error(), Description: ""}
+		r.JSON(500, response)
 	}
+
 }

@@ -1,5 +1,4 @@
-###Note:###
-Gondalf is under heavy development which might lead to changes in request or/and response formats. 
+Please feel free to create a new issue if you come across one or want a new feature to be added. I am looking for contributors, feel free to send pull requests.
 
 ##What is Gondalf?##
 Gondalf is a ready to deploy microservice that provides user management, authentication, and role based authorization features out of box. Gondalf is built using [martini](https://github.com/go-martini/martini) and [gorm](https://github.com/jinzhu/gorm), and uses [postgresql](http://www.postgresql.org) as the default database.
@@ -32,10 +31,11 @@ Over the course of multiple projects I realized that there are some common featu
 - [X] Refresh app properties from DB after fixed interval
 - [X] Add a cron job for cleaning up and archiving expired session tokens to keep the validation request latency low
 - [X] Dockerize gondalf
+- [X] Refactored the API to include a consistent error payload
 - [ ] Add SSL support for the end point
 - [ ] Add more events to Activity Logs
 - [ ] Provide one click deploy solution
-- [ ] Improve documentation 
+- [X] Improve documentation 
 - [ ] Add CI on checkins
 - [ ] Add support for other databases
 
@@ -81,6 +81,8 @@ These are set in a table called "app_properties" and are initially set to defaul
 - Encryption Failed
 - Database Error
 - Permission Denied
+- System Error
+- Duplicate Username Error
 
 ###LoginCredential###
 
@@ -101,7 +103,6 @@ deviceId code 1 for web, 2 for mobile
 ```javascript
 {
   "sessionToken": "testSessionToken",
-  "error":"errorResponse"
 }
 ```
 
@@ -165,15 +166,6 @@ If the old credentials are correct then:
 {
 	"passwordChanged": true,
 	"sessionToken": "testSessionToken",
-	"error": nil
-}
-```
-
-else
-
-```javascript
-{
-	"passwordChanged" :false
 }
 ```
 
@@ -189,12 +181,9 @@ else
 
 ####Response####
 
-Returns userId = -1 if there is an error
-
 ```javascript
 {
 	"userId": 1234,
-	"error": nil
 }
 ```
 
@@ -213,5 +202,14 @@ Returns userId = -1 if there is an error
 
 ```javascript
 {
-  "permissionCheckResult" : nil (or error details depending on the userId)
+  "permissionResult" : true
+}
+
+####Error Response###
+
+```javascript
+{
+	"status": "Internal Server Error" / "Unauthorized" / "Conflict" / "Forbidden"
+	"message": "Invalid Session Token" / "Expired Session Token" etc.
+	"description": ""
 }

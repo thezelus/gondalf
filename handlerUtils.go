@@ -154,7 +154,7 @@ func CreateNewUser(request CreateUserRequest, db *gorm.DB) (int, error) {
 	}
 
 	ERROR.Println("Duplicate username " + request.Username + " server validation in create user")
-	return 409, errors.New("Duplicate username")
+	return 409, DuplicateUsernameError
 }
 
 //Returns true if the username is valid i.e. doesn't already exist, else returns false.

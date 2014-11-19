@@ -40,3 +40,9 @@ type CheckPermissionRequest struct {
 	UserId                int64  `json:"userId" binding:"required"`
 	PermissionDescription string `json:"permissionDescription" binding:"required"`
 }
+
+type ErrorResponse struct {
+	Status      string `json:"status" binding:"required"`
+	Message     string `json:"message" binding:"required"`
+	Description string `json:"description"`
+}

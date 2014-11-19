@@ -41,6 +41,8 @@ var (
 	EncryptionError          = errors.New("Encryption Failed")
 	DatabaseError            = errors.New("Database Error")
 	PermissionDenied         = errors.New("Permission Denied")
+	SystemError              = errors.New("System Error")
+	DuplicateUsernameError   = errors.New("Duplicate username")
 )
 
 //Constant values:
