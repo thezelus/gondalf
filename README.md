@@ -204,6 +204,7 @@ If the old credentials are correct then:
 {
   "permissionResult" : true
 }
+```
 
 ####Error Response###
 
@@ -213,3 +214,4 @@ If the old credentials are correct then:
 	"message": "Invalid Session Token" / "Expired Session Token" etc.
 	"description": ""
 }
+```
