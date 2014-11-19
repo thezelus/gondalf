@@ -187,7 +187,7 @@ If the old credentials are correct then:
 }
 ```
 
-###Permission Checking
+###Permission Checking###
 
 ####Request####
 
@@ -206,7 +206,7 @@ If the old credentials are correct then:
 }
 ```
 
-####Error Response###
+###Error Response###
 
 ```javascript
 {
