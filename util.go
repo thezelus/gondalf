@@ -128,7 +128,7 @@ func LoadConfigurationFromFile() {
 	err := viper.ReadInConfig()
 
 	if err != nil {
-		panic("Configuration couldn't be initialized, panicking now")
+		panic("Configuration couldn't be initialized, panicking now " + err.Error())
 	}
 }
 

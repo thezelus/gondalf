@@ -32,10 +32,11 @@ Over the course of multiple projects I realized that there are some common featu
 - [X] Add a cron job for cleaning up and archiving expired session tokens to keep the validation request latency low
 - [X] Dockerize gondalf
 - [X] Refactored the API to include a consistent error payload
-- [ ] Add SSL support for the end point
 - [ ] Add more events to Activity Logs
+- [ ] Improve documentation - add details about logging, app properties, and configuration 
+- [ ] Switch to [negroni](https://github.com/codegangsta/negroni) and [gorilla mux](http://www.gorillatoolkit.org/pkg/mux)
+- [ ] Add TLS support for the end point
 - [ ] Provide one click deploy solution
-- [X] Improve documentation 
 - [ ] Add CI on checkins
 - [ ] Add support for other databases
 
@@ -122,7 +123,7 @@ For validating unique username
 
 ```javascript
 {
-	"valid": true/false
+	"valid": true
 }
 ```
 
@@ -141,7 +142,7 @@ For validating unique username
 
 ```javascript
 {
-	"userCreated": true/false
+	"userCreated": true
 }
 ```
 
@@ -165,7 +166,7 @@ If the old credentials are correct then:
 ```javascript
 {
 	"passwordChanged": true,
-	"sessionToken": "testSessionToken",
+	"sessionToken": "testSessionToken"
 }
 ```
 
@@ -183,7 +184,7 @@ If the old credentials are correct then:
 
 ```javascript
 {
-	"userId": 1234,
+	"userId": 1234
 }
 ```
 
@@ -210,8 +211,8 @@ If the old credentials are correct then:
 
 ```javascript
 {
-	"status": "Internal Server Error" / "Unauthorized" / "Conflict" / "Forbidden"
-	"message": "Invalid Session Token" / "Expired Session Token" etc.
+	"status": "Internal Server Error" / "Unauthorized" / "Conflict" / "Forbidden",
+	"message": "Invalid Session Token" / "Expired Session Token" etc.,
 	"description": ""
 }
 ```

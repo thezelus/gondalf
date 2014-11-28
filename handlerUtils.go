@@ -318,3 +318,5 @@ func CheckPermissionsForUser(userid int64, permission Permission, db *gorm.DB) e
 	TRACE.Println("Permission verified for userId: " + strconv.FormatInt(userid, 10) + " , permission: " + permission.PermissionDescription)
 	return nil
 }
+
+//End session for logout
